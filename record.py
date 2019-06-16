@@ -5,8 +5,10 @@ import pyaudio
 import wave
 import sched
 import sys
+import inspect
 
-CHUNK = 8192
+#CHUNK = 8192
+CHUNK = 3000
 FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 44100
@@ -54,6 +56,7 @@ def recorder():
                              channels=CHANNELS,
                              rate=RATE,
                              input=True,
+                             output=False,
                              frames_per_buffer=CHUNK,
                              stream_callback = callback)
             print("Stream active:", stream.is_active())
@@ -64,13 +67,14 @@ def recorder():
 
     elif not listener.key_pressed and started:
         print("Stop recording")
-        stream.stop_stream()
-        stream.close()
-        p.terminate()
+
+        #stream.stop_stream()
+        #stream.close()
+        #p.terminate()
         listener.wf.writeframes(b''.join(frames))
         listener.wf.close()
         print("You should have a wav file in the current directory")
-        sys.exit()
+        #sys.exit()
     # Reschedule the recorder function in 100 ms.
     task.enter(0.1, 1, recorder, ())
 
